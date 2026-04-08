@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  stays     Stay[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stay {
+  id            String   @id @default(uuid())
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  countryCode   String   // e.g., "FR" for France, "SCH" for Schengen Area
+  countryName   String
+  arrivalDate   DateTime
+  departureDate DateTime
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CountryRule {
+  id               String   @id @default(uuid())
+  countryCode      String   @unique // e.g., "FR", "US", "SCH"
+  countryName      String
+  maxDays          Int      // e.g., 183 for tax, 90 for Schengen
+  windowDays       Int      // e.g., 365 for tax, 180 for Schengen
+  isRolling        Boolean  @default(false)
+  description      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
