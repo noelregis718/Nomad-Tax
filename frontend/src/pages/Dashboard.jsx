@@ -1,136 +1,164 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, CheckCircle, Info, Calendar } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, Globe, Clock, Calendar, Plus } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import axios from 'axios';
+import Layout from '../components/Layout';
 import Timeline from '../components/Timeline';
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
+  const [stays, setStays] = useState([]);
+  const [summaries, setSummaries] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newStay, setNewStay] = useState({
     countryCode: '',
     countryName: '',
     arrivalDate: '',
     departureDate: '',
+    notes: ''
   });
 
-  const [summaries, setSummaries] = useState([
-    { countryCode: 'FR', countryName: 'France', daysUsed: 142, threshold: 183, status: 'safe' },
-    { countryCode: 'SCH', countryName: 'Schengen Area', daysUsed: 78, threshold: 90, status: 'warning' },
-    { countryCode: 'US', countryName: 'United States', daysUsed: 25, threshold: 183, status: 'safe' },
-  ]);
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [staysRes, summaryRes] = await Promise.all([
+        axios.get('http://localhost:5000/api/stays'),
+        axios.get('http://localhost:5000/api/summary/SCH') // Default to Schengen for overview
+      ]);
+      setStays(staysRes.data);
+      // For demo, we'll create a list of summaries. In a real app, 
+      // you'd fetch multiple or the backend would return an array.
+      setSummaries([
+        { countryName: 'Schengen Area', ...summaryRes.data }
+      ]);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleAddStay = async () => {
+    try {
+      await axios.post('http://localhost:5000/api/stays', newStay);
+      setShowModal(false);
+      fetchData();
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to add stay');
+    }
+  };
+
+  if (loading) return <div className="loading-screen">Aligning global coordinates...</div>;
 
   return (
-    <div className="dashboard-grid" style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: '24px',
-      gridAutoRows: 'minmax(200px, auto)'
-    }}>
-      {/* 1. Main Status Card - Wide */}
-      <div className="glass-card" style={{ gridColumn: 'span 2', padding: '2rem' }}>
-        <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Calendar size={20} color="var(--primary)" />
-          Residency Overview (2026)
-        </h3>
-        <div style={{ height: '300px', width: '100%' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={summaries}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-              <XAxis dataKey="countryName" stroke="var(--text-muted)" />
-              <YAxis stroke="var(--text-muted)" />
-              <Tooltip 
-                contentStyle={{ background: 'var(--bg-card)', border: 'none', borderRadius: '8px' }}
-                itemStyle={{ color: 'white' }}
-              />
-              <Bar dataKey="daysUsed" radius={[4, 4, 0, 0]}>
-                {summaries.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.daysUsed / entry.threshold > 0.8 ? 'var(--warning)' : 'var(--primary)'} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* 2. Schengen Alert Card */}
-      <div className="glass-card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
-        <div style={{ 
-          width: '80px', height: '80px', 
-          borderRadius: '50%', 
-          background: 'rgba(245, 158, 11, 0.1)', 
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: '1.5rem'
-        }}>
-          <AlertTriangle size={40} color="var(--warning)" />
-        </div>
-        <h3 style={{ color: 'var(--warning)', marginBottom: '8px' }}>Action Required</h3>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-          You have <strong>12 days</strong> remaining in the Schengen Area before violating the 90/180 rule.
-        </p>
-        <button style={{ marginTop: '1.5rem', padding: '8px 16px', background: 'rgba(245, 158, 11, 0.2)', color: 'var(--warning)', border: '1px solid var(--warning)' }}>
-          Plan Exit Strategy
-        </button>
-      </div>
-
-      {/* 3. Stats Small Cards */}
-      <StatsCard label="Total Countries" value="12" sub="Across 3 continents" icon={<Globe size={20} />} />
-      <StatsCard label="Travel Days" value="245" sub="67% of the year" icon={<Clock size={20} />} />
-      <StatsCard label="Audit Readiness" value="100%" sub="All logs verified" icon={<Shield size={20} />} />
-      
-      {/* 4. Visual Timeline - Full Width */}
-      <div style={{ gridColumn: 'span 3' }}>
-        <Timeline />
-      </div>
-
-      {/* 5. Simple Modal (Absolute position for demo) */}
-      {showModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-          background: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center',
-          zIndex: 1000
-        }}>
-          <div className="glass-card" style={{ padding: '2rem', width: '400px' }}>
-            <h3 style={{ marginBottom: '1.5rem' }}>Add New Stay</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <input type="text" placeholder="Country Name (e.g. France)" style={inputStyle} onChange={e => setNewStay({...newStay, countryName: e.target.value})} />
-              <input type="text" placeholder="Country Code (e.g. FR)" style={inputStyle} onChange={e => setNewStay({...newStay, countryCode: e.target.value})} />
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <input type="date" style={inputStyle} onChange={e => setNewStay({...newStay, arrivalDate: e.target.value})} />
-                <input type="date" style={inputStyle} onChange={e => setNewStay({...newStay, departureDate: e.target.value})} />
-              </div>
-              <button className="btn-primary" style={{ marginTop: '1rem' }} onClick={() => setShowModal(false)}>Save Stay</button>
-              <button style={{ background: 'transparent', color: 'var(--text-muted)' }} onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
+    <Layout onAddClick={() => setShowModal(true)}>
+      <div className="dashboard-grid">
+        {/* Main Chart */}
+        <div className="glass-card chart-container" style={{ gridColumn: 'span 2', padding: '2rem' }}>
+          <h3 className="card-title">
+            <Calendar size={20} className="text-blue" />
+            Residency Compliance Overview
+          </h3>
+          <div style={{ height: '300px', width: '100%', marginTop: '2rem' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={summaries}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                <XAxis dataKey="countryName" stroke="var(--text-dim)" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="var(--text-dim)" fontSize={12} tickLine={false} axisLine={false} />
+                <Tooltip 
+                  cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                  contentStyle={{ background: '#1e293b', border: '1px solid var(--glass-border)', borderRadius: '12px' }}
+                />
+                <Bar dataKey="daysUsed" barSize={60} radius={[8, 8, 0, 0]}>
+                  {summaries.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.daysUsed / entry.threshold > 0.8 ? '#f59e0b' : '#3b82f6'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
+
+        {/* Action Card */}
+        <div className="glass-card alert-card">
+          <div className="alert-icon-wrapper">
+            <AlertTriangle size={32} className="text-orange" />
+          </div>
+          <h3>Policy Alert</h3>
+          <p>
+            You are approaching the <strong>90-day limit</strong> in the Schengen Zone. 
+            Consider planning your next exit by May 14th.
+          </p>
+          <button className="btn btn-secondary" style={{ width: '100%', marginTop: '1rem' }}>
+            View Detailed Rules
+          </button>
+        </div>
+
+        {/* Stats Row */}
+        <StatsCard label="Total Stays" value={stays.length} sub="Verified records" icon={<Clock className="text-blue" />} />
+        <StatsCard label="Active Zone" value="Europe" sub="Current location" icon={<Globe className="text-green" />} />
+        <StatsCard label="Compliance Score" value="98%" sub="Audit-ready" icon={<Shield className="text-purple" />} />
+
+        {/* Timeline */}
+        <div style={{ gridColumn: 'span 3', marginTop: '1rem' }}>
+          <h3 className="section-subtitle">Visual Travel Timeline</h3>
+          <Timeline stays={stays} />
+        </div>
+      </div>
+
+      {/* Add Stay Modal */}
+      {showModal && (
+        <div className="modal-overlay">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass-card modal-content"
+          >
+            <h3>Record New Travel</h3>
+            <div className="form-grid">
+              <div className="input-group">
+                <label>Country Name</label>
+                <input type="text" placeholder="e.g. Portugal" onChange={e => setNewStay({...newStay, countryName: e.target.value})} />
+              </div>
+              <div className="input-group">
+                <label>ISO Code</label>
+                <input type="text" placeholder="e.g. PT" onChange={e => setNewStay({...newStay, countryCode: e.target.value})} />
+              </div>
+              <div className="input-group">
+                <label>Arrival Date</label>
+                <input type="date" onChange={e => setNewStay({...newStay, arrivalDate: e.target.value})} />
+              </div>
+              <div className="input-group">
+                <label>Departure Date</label>
+                <input type="date" onChange={e => setNewStay({...newStay, departureDate: e.target.value})} />
+              </div>
+            </div>
+            <div className="modal-actions">
+              <button className="btn btn-primary" onClick={handleAddStay}>Save Record</button>
+              <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+            </div>
+          </motion.div>
+        </div>
       )}
-    </div>
+    </Layout>
   );
 };
 
-const inputStyle = {
-  background: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.1)',
-  padding: '12px',
-  borderRadius: '8px',
-  color: 'white',
-  width: '100%'
-};
-
 const StatsCard = ({ label, value, sub, icon }) => (
-  <div className="glass-card" style={{ padding: '1.5rem' }}>
-    <div style={{ color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-      {label}
+  <div className="glass-card stats-card">
+    <div className="stats-header">
+      <span className="stats-label">{label}</span>
       {icon}
     </div>
-    <div style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '4px' }}>{value}</div>
-    <div style={{ fontSize: '0.85rem', color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-      <CheckCircle size={14} />
-      {sub}
+    <div className="stats-value">{value}</div>
+    <div className="stats-footer">
+      <CheckCircle size={14} className="text-green" />
+      <span>{sub}</span>
     </div>
   </div>
 );
-
-// Lucide icons needed for StatsCard but imported globally in Layout or here
-import { Globe, Clock } from 'lucide-react';
 
 export default Dashboard;

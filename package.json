@@ -1,0 +1,14 @@
+{
+  "name": "nomad-tax-root",
+  "version": "1.0.0",
+  "description": "Unified runner for Nomad-Tax project",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "db:prepare": "cd backend && npm run db:prepare",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
