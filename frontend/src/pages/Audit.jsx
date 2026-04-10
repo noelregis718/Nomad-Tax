@@ -4,13 +4,10 @@ import Layout from '../components/Layout';
 
 const Audit = () => {
   return (
-    <Layout>
-      <div className="page-header">
-        <div>
-          <h2 className="section-title">Audit Readiness</h2>
-          <p className="section-subtitle">Manage your verified presence documentation and generated residency reports.</p>
-        </div>
-      </div>
+    <Layout 
+      title="Audit Readiness" 
+      subtitle="Manage your verified presence documentation and generated residency reports."
+    >
 
       <div className="audit-dashboard">
         {/* Report Card */}

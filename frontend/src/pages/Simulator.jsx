@@ -17,13 +17,10 @@ const Simulator = () => {
   };
 
   return (
-    <Layout>
-      <div className="page-header">
-        <div>
-          <h2 className="section-title">Trip Simulator</h2>
-          <p className="section-subtitle">Predict your future compliance status before you even book.</p>
-        </div>
-      </div>
+    <Layout 
+      title="Trip Simulator" 
+      subtitle="Predict your future compliance status before you even book."
+    >
 
       <div className="simulator-layout">
         <div className="simulator-controls">

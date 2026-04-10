@@ -9,9 +9,11 @@ import History from './pages/History';
 import Rules from './pages/Rules';
 import Simulator from './pages/Simulator';
 import Audit from './pages/Audit';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import './index.css';
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { token, loading } = useAuth();
   if (loading) return <div>Loading...</div>;
   if (!token) return <Navigate to="/auth" />;
@@ -54,6 +56,8 @@ function App() {
                 <Audit />
               </ProtectedRoute>
             } />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Router>

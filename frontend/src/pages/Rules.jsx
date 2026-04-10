@@ -14,25 +14,22 @@ const COUNTRIES_MOCK = [
 const Rules = () => {
   const [search, setSearch] = useState('');
 
-  const filtered = COUNTRIES_MOCK.filter(c => 
-    c.name.toLowerCase().includes(search.toLowerCase()) || 
+  const filtered = COUNTRIES_MOCK.filter(c =>
+    c.name.toLowerCase().includes(search.toLowerCase()) ||
     c.zone.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <Layout>
-      <div className="page-header">
-        <div>
-          <h2 className="section-title">Global Rules Intelligence</h2>
-          <p className="section-subtitle">Real-time residency and tax thresholds for 150+ countries.</p>
-        </div>
-      </div>
+    <Layout 
+      title="Global Rules Intelligence" 
+      subtitle="Real-time residency and tax thresholds for 150+ countries."
+    >
 
       <div className="search-box glass-card">
         <Search size={20} className="text-dim" />
-        <input 
-          type="text" 
-          placeholder="Search by country or zone (e.g. Schengen)..." 
+        <input
+          type="text"
+          placeholder="Search by country or zone (e.g. Schengen)..."
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, AlertTriangle, CheckCircle, Globe, Clock, Calendar, Plus } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
 import Layout from '../components/Layout';
@@ -59,7 +58,6 @@ const Dashboard = () => {
         {/* Main Chart */}
         <div className="glass-card chart-container" style={{ gridColumn: 'span 2', padding: '2rem' }}>
           <h3 className="card-title">
-            <Calendar size={20} className="text-blue" />
             Residency Compliance Overview
           </h3>
           <div style={{ height: '300px', width: '100%', marginTop: '2rem' }}>
@@ -84,9 +82,6 @@ const Dashboard = () => {
 
         {/* Action Card */}
         <div className="glass-card alert-card">
-          <div className="alert-icon-wrapper">
-            <AlertTriangle size={32} className="text-orange" />
-          </div>
           <h3>Policy Alert</h3>
           <p>
             You are approaching the <strong>90-day limit</strong> in the Schengen Zone. 
@@ -98,9 +93,9 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Row */}
-        <StatsCard label="Total Stays" value={stays.length} sub="Verified records" icon={<Clock className="text-blue" />} />
-        <StatsCard label="Active Zone" value="Europe" sub="Current location" icon={<Globe className="text-green" />} />
-        <StatsCard label="Compliance Score" value="98%" sub="Audit-ready" icon={<Shield className="text-purple" />} />
+        <StatsCard label="Total Stays" value={stays.length} sub="Verified records" />
+        <StatsCard label="Active Zone" value="Europe" sub="Current location" />
+        <StatsCard label="Compliance Score" value="98%" sub="Audit-ready" />
 
         {/* Timeline */}
         <div style={{ gridColumn: 'span 3', marginTop: '1rem' }}>
@@ -151,11 +146,9 @@ const StatsCard = ({ label, value, sub, icon }) => (
   <div className="glass-card stats-card">
     <div className="stats-header">
       <span className="stats-label">{label}</span>
-      {icon}
     </div>
     <div className="stats-value">{value}</div>
     <div className="stats-footer">
-      <CheckCircle size={14} className="text-green" />
       <span>{sub}</span>
     </div>
   </div>

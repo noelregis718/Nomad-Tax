@@ -5,9 +5,9 @@ const { PrismaClient } = require('@prisma/client');
 const TaxCalculator = require('./utils/calculator');
 const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 dotenv.config();
-
 const app = express();
 const prisma = new PrismaClient();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -31,7 +31,6 @@ app.use(cors());
 app.use(express.json());
 
 // --- ROUTES ---
-
 // Google Auth Endpoint
 app.post('/api/auth/google', async (req, res) => {
   try {
@@ -67,6 +66,78 @@ app.post('/api/auth/google', async (req, res) => {
   } catch (error) {
     console.error('Auth Error:', error);
     res.status(500).json({ error: 'Authentication failed' });
+  }
+});
+
+// Register Endpoint
+app.post('/api/auth/register', async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name: name || email.split('@')[0],
+      },
+    });
+
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email } });
+  } catch (error) {
+    console.error('Register Error:', error);
+    res.status(500).json({ error: 'Registration failed' });
+  }
+});
+
+// Login Endpoint
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Find user
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user || !user.password) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Verify password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid email or password' });
+    }
+
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({ token, user: { id: user.id, name: user.name, email: user.email, avatar: user.avatar } });
+  } catch (error) {
+    console.error('Login Error:', error);
+    res.status(500).json({ error: 'Login failed' });
   }
 });
 

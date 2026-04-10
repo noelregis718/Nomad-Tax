@@ -25,23 +25,10 @@ const History = () => {
   if (loading) return <div className="loading-screen">Replaying your journey...</div>;
 
   return (
-    <Layout>
-      <div className="page-header">
-        <div>
-          <h2 className="section-title">Travel History</h2>
-          <p className="section-subtitle">A granular record of your movements across borders.</p>
-        </div>
-        <div className="header-actions">
-          <button className="btn btn-secondary">
-            <Filter size={18} />
-            Filters
-          </button>
-          <button className="btn btn-secondary">
-            <Download size={18} />
-            Export CSV
-          </button>
-        </div>
-      </div>
+    <Layout 
+      title="Travel History" 
+      subtitle="A granular record of your movements across borders."
+    >
 
       <div className="history-grid">
         {/* Map Visualization (Mock) */}

@@ -1,8 +1,8 @@
-import { Globe, Plane, Clock, User, LogOut, LayoutDashboard, Map, FlaskConical, FolderLock, BookOpen } from 'lucide-react';
+import { Globe, Plane, Clock, User, LogOut, LayoutDashboard, Map, FlaskConical, FolderLock, BookOpen, Search, Home } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
-const Layout = ({ children, onAddClick }) => {
+const Layout = ({ children, onAddClick, title, subtitle }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -13,30 +13,28 @@ const Layout = ({ children, onAddClick }) => {
   };
 
   const menuItems = [
-    { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/dashboard' },
+    { icon: <Home size={20} />, label: 'Dashboard', path: '/dashboard' },
     { icon: <Clock size={20} />, label: 'History', path: '/history' },
     { icon: <BookOpen size={20} />, label: 'Rules Hub', path: '/rules' },
     { icon: <FlaskConical size={20} />, label: 'Simulator', path: '/simulator' },
     { icon: <FolderLock size={20} />, label: 'Audit Vault', path: '/audit' },
   ];
 
+  const displayTitle = title || `Welcome back, ${user?.name?.split(' ')[0] || 'Nomad'}`;
+  const displaySubtitle = subtitle || "Here's your intelligence summary for today.";
+
   return (
     <div className="layout-container" style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-dark)' }}>
       {/* Sidebar */}
-      <aside className="glass-card" style={{
+      <aside className="sidebar-continuous" style={{
         width: '280px',
-        margin: '1rem',
-        padding: '2rem',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: '1.5rem',
-        border: '1px solid var(--glass-border)'
+        padding: '1.15rem 2rem 2rem',
       }}>
         <div className="logo" style={{ 
           display: 'flex', 
           alignItems: 'center', 
           gap: '12px', 
-          marginBottom: '3rem',
+          marginBottom: '3.5rem',
           fontSize: '1.6rem',
           fontWeight: 800,
         }}>
@@ -47,19 +45,19 @@ const Layout = ({ children, onAddClick }) => {
         <nav style={{ flex: 1 }}>
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {menuItems.map((item) => (
-              <NavItem 
+              <NavItem
                 key={item.path}
-                icon={item.icon} 
-                label={item.label} 
+                icon={item.icon}
+                label={item.label}
                 path={item.path}
-                active={location.pathname === item.path} 
+                active={location.pathname === item.path}
               />
             ))}
           </ul>
         </nav>
 
         <div className="sidebar-footer">
-          <button 
+          <button
             onClick={handleLogout}
             style={{
               display: 'flex',
@@ -81,18 +79,54 @@ const Layout = ({ children, onAddClick }) => {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: '2rem 3rem', overflowY: 'auto' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3.5rem' }}>
-          <div>
-            <h1 style={{ fontSize: '2.5rem', fontWeight: 800 }}>Welcome back, {user?.name?.split(' ')[0] || 'Nomad'}</h1>
-            <p style={{ color: 'var(--text-dim)', fontSize: '1.1rem' }}>Here's your intelligence summary for today.</p>
+      <main style={{ flex: 1, padding: '0.9rem 3rem', overflowY: 'auto' }}>
+        {/* Top Search Row (Always Visible) */}
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.5rem' }}>
+          <div className="search-box" style={{ 
+            position: 'relative', 
+            width: '100%', 
+            maxWidth: '350px' 
+          }}>
+            <input 
+              type="text" 
+              placeholder="Search movements..." 
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem 0.75rem 1rem',
+                borderRadius: '1rem',
+                border: '1px solid var(--glass-border)',
+                background: 'white',
+                fontSize: '0.95rem',
+                outline: 'none',
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+              }}
+            />
           </div>
-          <button className="btn btn-primary" 
-            onClick={onAddClick}
-          >
-            <Plane size={18} />
-            Add New Stay
-          </button>
+        </div>
+
+        {/* Full-width Horizontal Distinguishing Line (Always Visible) */}
+        <div style={{ 
+          width: 'calc(100% + 6rem)', 
+          height: '1px', 
+          background: 'rgba(0,0,0,0.06)', 
+          marginLeft: '-3rem',
+          marginBottom: '1.55rem' 
+        }} />
+
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+          <div style={{ flexShrink: 0 }}>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 800 }}>{displayTitle}</h1>
+            <p style={{ color: 'var(--text-dim)', fontSize: '1.1rem' }}>{displaySubtitle}</p>
+          </div>
+
+          {onAddClick && (
+            <button className="btn btn-primary" 
+              onClick={onAddClick}
+              style={{ flexShrink: 0 }}
+            >
+              Add New Stay
+            </button>
+          )}
         </header>
 
         {children}
@@ -107,16 +141,16 @@ const NavItem = ({ icon, label, path, active }) => (
       display: 'flex',
       alignItems: 'center',
       gap: '12px',
-      padding: '14px',
-      borderRadius: '14px',
-      color: active ? 'white' : 'var(--text-dim)',
-      background: active ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
+      padding: '10px 14px',
+      borderRadius: '8px',
+      color: active ? '#0f172a' : 'var(--text-dim)',
+      background: active ? '#e2e8f0' : 'transparent',
       textDecoration: 'none',
-      fontWeight: 500,
+      fontWeight: active ? 600 : 500,
       transition: 'all 0.2s ease',
-      border: active ? '1px solid rgba(37, 99, 235, 0.2)' : '1px solid transparent'
+      border: 'none'
     }}>
-      <span style={{ color: active ? '#60a5fa' : 'inherit' }}>{icon}</span>
+      <span style={{ color: active ? '#0f172a' : 'inherit', display: 'flex', alignItems: 'center' }}>{icon}</span>
       {label}
     </Link>
   </li>
