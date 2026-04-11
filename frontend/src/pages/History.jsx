@@ -4,25 +4,12 @@ import Layout from '../components/Layout';
 import Timeline from '../components/Timeline';
 import axios from 'axios';
 
+import { useTravel } from '../context/TravelContext';
+
 const History = () => {
-  const [stays, setStays] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { stays, loading } = useTravel();
 
-  useEffect(() => {
-    const fetchStays = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/stays');
-        setStays(res.data);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setLoading(false);
-      }
-    };
-    fetchStays();
-  }, []);
-
-  if (loading) return <div className="loading-screen">Replaying your journey...</div>;
+  if (loading && stays.length === 0) return <div className="loading-screen">Replaying your journey...</div>;
 
   return (
     <Layout 
@@ -44,7 +31,6 @@ const History = () => {
         <div style={{ gridColumn: 'span 3' }}>
           <div className="glass-card timeline-expanded-card" style={{ padding: '2rem' }}>
             <div className="card-header">
-              <Clock size={20} className="text-blue" />
               <h3>Chronological Sequence</h3>
             </div>
             <div style={{ marginTop: '2rem' }}>
@@ -80,7 +66,7 @@ const History = () => {
           padding: 0.25rem 0.75rem;
           background: white;
           border: 1px solid var(--glass-border);
-          border-radius: 99px;
+          border-radius: 8px;
           font-size: 0.75rem;
           font-weight: 600;
         }

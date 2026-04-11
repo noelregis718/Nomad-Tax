@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import * as React from "react"
+import { motion } from "framer-motion"
 
 interface FooterProps {
   logo: React.ReactNode
@@ -46,16 +47,6 @@ export function Footer({
           </div>
 
           <div className="footer-nav-grid">
-            <div className="footer-nav-group">
-              <h4>Platform</h4>
-              <ul className="footer-nav-list">
-                {mainLinks.map((link, i) => (
-                  <li key={i}>
-                    <a href={link.href}>{link.label}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
             
             <div className="footer-nav-group">
               <h4>Legal</h4>
@@ -68,6 +59,18 @@ export function Footer({
               </ul>
             </div>
           </div>
+        </div>
+
+        <div className="footer-huge-brand">
+          <motion.h2 
+            className="huge-text"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            Nomad Tax
+          </motion.h2>
         </div>
 
         <div className="footer-bottom">

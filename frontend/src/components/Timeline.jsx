@@ -10,7 +10,7 @@ const Timeline = ({ stays }) => {
   ];
 
   return (
-    <div className="glass-card" style={{ padding: '2rem', marginTop: '24px' }}>
+    <div className="glass-card" style={{ padding: '2rem' }}>
       <h3 style={{ marginBottom: '2rem' }}>Travel Timeline</h3>
       <div style={{ position: 'relative', height: '100px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', overflow: 'hidden' }}>
         {/* Months labels */}
@@ -38,7 +38,7 @@ const Timeline = ({ stays }) => {
                   width: `${width}%`,
                   height: '40px',
                   background: stay.color,
-                  borderRadius: '20px',
+                  borderRadius: '8px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

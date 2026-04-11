@@ -9,6 +9,16 @@ const COUNTRIES_MOCK = [
   { name: 'Mexico', code: 'MX', rule: 'Temporary Residency up to 4 years. No tax on foreign income if remote.', zone: 'Latham' },
   { name: 'UAE', code: 'AE', rule: '0% Personal income tax. Digital Nomad Visa for 1 year, renewable.', zone: 'GCC' },
   { name: 'France', code: 'FR', rule: 'Strict 183-day rule. Part of Schengen. No specific Nomad visa yet.', zone: 'Schengen' },
+  { name: 'United Kingdom', code: 'GB', rule: 'Statutory Residence Test (SRT) applies. 183-day rule. No specfic Nomad visa, but High Potential Individual available.', zone: 'Non-EU' },
+  { name: 'Germany', code: 'DE', rule: 'Freiberufler (Freelance) Visa available. High tax burden but excellent infrastructure. Part of Schengen.', zone: 'Schengen' },
+  { name: 'Italy', code: 'IT', rule: 'New Digital Nomad Visa launched in 2024. 70% tax reduction potential for relocated workers.', zone: 'Schengen' },
+  { name: 'Greece', code: 'GR', rule: 'Digital Nomad Visa with 50% tax reduction for first 7 years. 183-day residency rule.', zone: 'Schengen' },
+  { name: 'Indonesia', code: 'ID', rule: 'E33G Remote Worker Visa (Bali). 0% tax on foreign sourced income for 5 years.', zone: 'ASEAN' },
+  { name: 'Malaysia', code: 'MY', rule: 'DE Rantau Pass for digital nomads. 0-15% tax on qualified local income.', zone: 'ASEAN' },
+  { name: 'Georgia', code: 'GE', rule: 'Remotely from Georgia program. 1% tax for small businesses. 1-year visa-free for 95 countries.', zone: 'Non-EU' },
+  { name: 'Croatia', code: 'HR', rule: 'Digital Nomad Residence Permit. 0% tax on foreign income for the duration of the permit.', zone: 'Schengen' },
+  { name: 'Cyprus', code: 'CY', rule: 'Digital Nomad Visa with 50% tax reduction for high earners. 60-day rule for tax residency option.', zone: 'Non-EU' },
+  { name: 'Japan', code: 'JP', rule: 'New Digital Nomad Visa (Specified Activities) for 6-month stays. 0% tax for non-residents. Requires 10M JPY annual income.', zone: 'East Asia' },
 ];
 
 const Rules = () => {
@@ -25,21 +35,13 @@ const Rules = () => {
       subtitle="Real-time residency and tax thresholds for 150+ countries."
     >
 
-      <div className="search-box glass-card">
-        <Search size={20} className="text-dim" />
-        <input
-          type="text"
-          placeholder="Search by country or zone (e.g. Schengen)..."
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+
 
       <div className="rules-grid">
         {filtered.map(country => (
           <div key={country.code} className="glass-card rule-card">
             <div className="rule-header">
               <div className="country-info">
-                <span className="flag">旗</span> {/* Placeholder for flag icon */}
                 <h3>{country.name}</h3>
               </div>
               <span className={`zone-badge ${country.zone.toLowerCase()}`}>{country.zone}</span>
@@ -58,7 +60,7 @@ const Rules = () => {
           align-items: center;
           gap: 1rem;
           padding: 1rem 1.5rem;
-          margin-bottom: 3rem;
+          margin-bottom: 2rem;
         }
         .search-box input {
           background: transparent;
@@ -88,7 +90,7 @@ const Rules = () => {
         .rule-text { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; }
         .zone-badge {
           padding: 0.25rem 0.6rem;
-          border-radius: 6px;
+          border-radius: 8px;
           font-size: 0.75rem;
           font-weight: 700;
         }

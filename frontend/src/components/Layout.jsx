@@ -30,15 +30,15 @@ const Layout = ({ children, onAddClick, title, subtitle }) => {
         width: '280px',
         padding: '1.15rem 2rem 2rem',
       }}>
-        <div className="logo" style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '12px', 
+        <div className="logo" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
           marginBottom: '3.5rem',
           fontSize: '1.6rem',
           fontWeight: 800,
         }}>
-          <Globe size={28} className="text-blue" />
+          <img src="/taxes.png" alt="Logo" className="logo-img" style={{ height: '32px' }} />
           <span className="text-gradient">NomadTax</span>
         </div>
 
@@ -75,52 +75,94 @@ const Layout = ({ children, onAddClick, title, subtitle }) => {
             <LogOut size={20} />
             Sign Out
           </button>
+
+          <div className="sidebar-user-info" style={{
+            marginTop: '1.25rem',
+            padding: '12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            borderTop: '1px solid var(--glass-border)',
+            paddingTop: '1.25rem'
+          }}>
+            {user?.avatar ? (
+              <img 
+                src={user.avatar} 
+                alt="Avatar" 
+                style={{ width: '32px', height: '32px', borderRadius: '8px', objectFit: 'cover' }} 
+              />
+            ) : (
+              <div style={{ 
+                width: '32px', 
+                height: '32px', 
+                borderRadius: '8px', 
+                background: 'var(--gradient-main)', 
+                color: 'white', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: '0.85rem'
+              }}>
+                {user?.email?.[0].toUpperCase() || 'N'}
+              </div>
+            )}
+            <div style={{ overflow: 'hidden' }}>
+              <p style={{ 
+                fontSize: '0.85rem', 
+                fontWeight: 600, 
+                color: 'var(--text-main)', 
+                whiteSpace: 'nowrap', 
+                overflow: 'hidden', 
+                textOverflow: 'ellipsis' 
+              }}>
+                {user?.email}
+              </p>
+            </div>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: '0.9rem 3rem', overflowY: 'auto' }}>
-        {/* Top Search Row (Always Visible) */}
-        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.5rem' }}>
-          <div className="search-box" style={{ 
-            position: 'relative', 
-            width: '100%', 
-            maxWidth: '350px' 
-          }}>
-            <input 
-              type="text" 
-              placeholder="Search movements..." 
+      <main style={{ flex: 1, padding: '1.25rem 3.5rem', overflowY: 'auto' }}>
+        {/* Unified Search Row */}
+        <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '1rem' }}>
+          <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>
+            <Search size={18} style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-dim)' }} />
+            <input
+              type="text"
+              placeholder="Search intelligence & movements..."
               style={{
                 width: '100%',
-                padding: '0.75rem 1rem 0.75rem 1rem',
-                borderRadius: '1rem',
+                padding: '0.85rem 1rem 0.85rem 2.75rem',
+                borderRadius: '12px',
                 border: '1px solid var(--glass-border)',
                 background: 'white',
                 fontSize: '0.95rem',
                 outline: 'none',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)'
+                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.03)'
               }}
             />
           </div>
         </div>
 
-        {/* Full-width Horizontal Distinguishing Line (Always Visible) */}
-        <div style={{ 
-          width: 'calc(100% + 6rem)', 
-          height: '1px', 
-          background: 'rgba(0,0,0,0.06)', 
-          marginLeft: '-3rem',
-          marginBottom: '1.55rem' 
+        {/* Global Divider Line */}
+        <div style={{
+          width: 'calc(100% + 7rem)',
+          height: '1px',
+          background: 'rgba(0,0,0,0.06)',
+          marginLeft: '-3.5rem',
+          marginBottom: '1.4rem'
         }} />
 
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.6rem' }}>
           <div style={{ flexShrink: 0 }}>
             <h1 style={{ fontSize: '2.5rem', fontWeight: 800 }}>{displayTitle}</h1>
             <p style={{ color: 'var(--text-dim)', fontSize: '1.1rem' }}>{displaySubtitle}</p>
           </div>
 
           {onAddClick && (
-            <button className="btn btn-primary" 
+            <button className="btn btn-primary"
               onClick={onAddClick}
               style={{ flexShrink: 0 }}
             >

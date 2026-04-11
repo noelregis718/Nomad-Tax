@@ -1,56 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import Layout from '../components/Layout';
 import Timeline from '../components/Timeline';
+import { useTravel } from '../context/TravelContext';
+import DatePicker from '../components/ui/DatePicker';
 
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
-  const [stays, setStays] = useState([]);
-  const [summaries, setSummaries] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { stays, summaries, loading, refreshData } = useTravel();
   const [newStay, setNewStay] = useState({
     countryCode: '',
     countryName: '',
-    arrivalDate: '',
-    departureDate: '',
+    arrivalDate: null, // Changed to null for DatePicker
+    departureDate: null, // Changed to null for DatePicker
     notes: ''
   });
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const [staysRes, summaryRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/stays'),
-        axios.get('http://localhost:5000/api/summary/SCH') // Default to Schengen for overview
-      ]);
-      setStays(staysRes.data);
-      // For demo, we'll create a list of summaries. In a real app, 
-      // you'd fetch multiple or the backend would return an array.
-      setSummaries([
-        { countryName: 'Schengen Area', ...summaryRes.data }
-      ]);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      setLoading(false);
-    }
-  };
-
   const handleAddStay = async () => {
     try {
-      await axios.post('http://localhost:5000/api/stays', newStay);
+      // Format dates back to string for API
+      const payload = {
+        ...newStay,
+        arrivalDate: newStay.arrivalDate?.toISOString().split('T')[0],
+        departureDate: newStay.departureDate?.toISOString().split('T')[0]
+      };
+      await axios.post('http://localhost:5000/api/stays', payload);
       setShowModal(false);
-      fetchData();
+      await refreshData();
+      // Reset state
+      setNewStay({ countryCode: '', countryName: '', arrivalDate: null, departureDate: null, notes: '' });
     } catch (error) {
       alert(error.response?.data?.error || 'Failed to add stay');
     }
   };
 
-  if (loading) return <div className="loading-screen">Aligning global coordinates...</div>;
+  if (loading && stays.length === 0) return <div className="loading-screen">Aligning global coordinates...</div>;
 
   return (
     <Layout onAddClick={() => setShowModal(true)}>
@@ -68,7 +54,7 @@ const Dashboard = () => {
                 <YAxis stroke="var(--text-dim)" fontSize={12} tickLine={false} axisLine={false} />
                 <Tooltip 
                   cursor={{ fill: 'rgba(255,255,255,0.03)' }}
-                  contentStyle={{ background: '#1e293b', border: '1px solid var(--glass-border)', borderRadius: '12px' }}
+                  contentStyle={{ background: '#1e293b', border: '1px solid var(--glass-border)', borderRadius: '8px' }}
                 />
                 <Bar dataKey="daysUsed" barSize={60} radius={[8, 8, 0, 0]}>
                   {summaries.map((entry, index) => (
@@ -98,8 +84,7 @@ const Dashboard = () => {
         <StatsCard label="Compliance Score" value="98%" sub="Audit-ready" />
 
         {/* Timeline */}
-        <div style={{ gridColumn: 'span 3', marginTop: '1rem' }}>
-          <h3 className="section-subtitle">Visual Travel Timeline</h3>
+        <div style={{ gridColumn: 'span 3' }}>
           <Timeline stays={stays} />
         </div>
       </div>
@@ -124,11 +109,19 @@ const Dashboard = () => {
               </div>
               <div className="input-group">
                 <label>Arrival Date</label>
-                <input type="date" onChange={e => setNewStay({...newStay, arrivalDate: e.target.value})} />
+                <DatePicker 
+                  selected={newStay.arrivalDate} 
+                  onChange={date => setNewStay({...newStay, arrivalDate: date})} 
+                  placeholderText="Select arrival"
+                />
               </div>
               <div className="input-group">
                 <label>Departure Date</label>
-                <input type="date" onChange={e => setNewStay({...newStay, departureDate: e.target.value})} />
+                <DatePicker 
+                  selected={newStay.departureDate} 
+                  onChange={date => setNewStay({...newStay, departureDate: date})} 
+                  placeholderText="Select departure"
+                />
               </div>
             </div>
             <div className="modal-actions">

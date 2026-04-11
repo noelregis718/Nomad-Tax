@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import { FlaskConical, Plus, Trash2, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 import Layout from '../components/Layout';
+import DatePicker from '../components/ui/DatePicker';
 
 const Simulator = () => {
   const [draftTrips, setDraftTrips] = useState([]);
-  const [newTrip, setNewTrip] = useState({ country: '', arrival: '', departure: '' });
+  const [newTrip, setNewTrip] = useState({ country: '', arrival: null, departure: null });
 
   const addTrip = () => {
     if (!newTrip.country || !newTrip.arrival || !newTrip.departure) return;
-    setDraftTrips([...draftTrips, { ...newTrip, id: Date.now() }]);
-    setNewTrip({ country: '', arrival: '', departure: '' });
+    
+    // Convert to string for display/storage consistency
+    const formattedTrip = {
+      ...newTrip,
+      id: Date.now(),
+      arrival: newTrip.arrival.toISOString().split('T')[0],
+      departure: newTrip.departure.toISOString().split('T')[0]
+    };
+    
+    setDraftTrips([...draftTrips, formattedTrip]);
+    setNewTrip({ country: '', arrival: null, departure: null });
   };
 
   const removeTrip = (id) => {
@@ -24,32 +34,45 @@ const Simulator = () => {
 
       <div className="simulator-layout">
         <div className="simulator-controls">
-          <div className="glass-card trip-builder" style={{ padding: '2rem' }}>
-            <div className="card-header">
-              <FlaskConical size={20} className="text-purple" />
-              <h3>Intelligence Model</h3>
+          <div className="glass-card trip-builder" style={{ padding: '2.5rem' }}>
+            <div className="card-header" style={{ marginBottom: '1rem' }}>
+              <h3 style={{ fontSize: '1.5rem' }}>Intelligence Model</h3>
             </div>
-            <p style={{ color: 'var(--text-dim)', marginBottom: '1.5rem', fontSize: '0.9rem' }}>
-              Add planned trips to check for potential 183-day or Schengen 90/180 violations.
+            <p style={{ color: 'var(--text-dim)', marginBottom: '2.5rem', fontSize: '1.05rem', lineHeight: '1.6' }}>
+              Add planned trips to check for potential 183-day residency triggers or Schengen 90/180 violations. Our AI model will simulate the impact on your global compliance records.
             </p>
             
             <div className="trip-form">
               <div className="input-field">
-                <label>Target Country</label>
-                <input type="text" placeholder="e.g. Italy" value={newTrip.country} onChange={e => setNewTrip({...newTrip, country: e.target.value})} />
+                <label style={{ fontSize: '0.9rem' }}>Target Country</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Italy" 
+                  value={newTrip.country} 
+                  onChange={e => setNewTrip({...newTrip, country: e.target.value})}
+                  style={{ padding: '1rem' }}
+                />
               </div>
               <div className="form-row">
                 <div className="input-field">
                   <label>Arrival</label>
-                  <input type="date" value={newTrip.arrival} onChange={e => setNewTrip({...newTrip, arrival: e.target.value})} />
+                  <DatePicker 
+                    selected={newTrip.arrival} 
+                    onChange={date => setNewTrip({...newTrip, arrival: date})} 
+                    placeholderText="Select arrival"
+                  />
                 </div>
                 <div className="input-field">
                   <label>Departure</label>
-                  <input type="date" value={newTrip.departure} onChange={e => setNewTrip({...newTrip, departure: e.target.value})} />
+                  <DatePicker 
+                    selected={newTrip.departure} 
+                    onChange={date => setNewTrip({...newTrip, departure: date})} 
+                    placeholderText="Select departure"
+                  />
                 </div>
               </div>
-              <button className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }} onClick={addTrip}>
-                <Plus size={18} />
+              <button className="btn btn-primary" style={{ width: '100%', marginTop: '1.5rem', padding: '1rem' }} onClick={addTrip}>
+                <Plus size={20} />
                 Add to Simulation
               </button>
             </div>
@@ -85,10 +108,7 @@ const Simulator = () => {
                   Risk Detected
                 </span>
               ) : (
-                <span className="status-verify safe">
-                  <ShieldCheck size={16} />
-                  All Clear
-                </span>
+                null
               )}
             </div>
 
@@ -117,8 +137,8 @@ const Simulator = () => {
       <style>{`
         .simulator-layout {
           display: grid;
-          grid-template-columns: 400px 1fr;
-          gap: 1.5rem;
+          grid-template-columns: 500px 1fr;
+          gap: 2rem;
           min-height: 600px;
         }
         .trip-form { display: flex; flex-direction: column; gap: 1rem; }
@@ -140,13 +160,13 @@ const Simulator = () => {
         .trash-btn { background: none; border: none; color: #ef4444; cursor: pointer; }
         
         .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
-        .status-verify { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; border-radius: 99px; font-size: 0.8rem; font-weight: 700; }
+        .status-verify { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700; }
         .status-verify.safe { background: #f0fdf4; color: #16a34a; }
         .status-verify.warning { background: #fffbeb; color: #d97706; }
         
         .progress-bar { height: 8px; background: rgba(0,0,0,0.05); border-radius: 4px; margin: 0.75rem 0; }
         .progress-bar .fill { height: 100%; background: var(--gradient-main); border-radius: 4px; }
-        .insight-box { margin-top: 4rem; padding: 1.5rem; background: #f8fafc; border-radius: 1rem; border: 1px dashed var(--glass-border); }
+        .insight-box { margin-top: 4rem; padding: 1.5rem; background: #f8fafc; border-radius: 12px; border: 1px dashed var(--glass-border); }
         .insight-box h4 { margin-bottom: 0.5rem; color: var(--text-main); }
         .insight-box p { color: var(--text-dim); line-height: 1.6; }
       `}</style>
@@ -155,3 +175,4 @@ const Simulator = () => {
 };
 
 export default Simulator;
+

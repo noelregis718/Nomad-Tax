@@ -34,7 +34,7 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  border-radius: 1.5rem;
+  border-radius: 12px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
@@ -65,7 +65,7 @@ body {
   gap: 0.75rem;
   padding: 0.875rem 1.75rem;
   font-weight: 600;
-  border-radius: 1rem;
+  border-radius: 8px;
   transition: all 0.3s ease;
   cursor: pointer;
   text-decoration: none;
@@ -154,9 +154,8 @@ body {
 .dashboard-full-view {
   width: 100%;
   padding: 4rem 0;
-  /* Vertical spacing */
+  margin-top: -30mm;
   background: transparent;
-  /* Blend with global background */
 }
 
 .dashboard-preview-placeholder {
@@ -168,7 +167,7 @@ body {
   height: 700px;
   background: white;
   border: 1px dashed var(--glass-border);
-  border-radius: 2rem;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -183,7 +182,8 @@ body {
   background: transparent;
   position: relative;
   z-index: 1;
-  margin-top: -6rem; /* Pull cards up aggressively */
+  margin-top: -6rem;
+  /* Pull cards up aggressively */
 }
 
 .product-showcase .landing-container {
@@ -240,7 +240,7 @@ body {
 .feature-card-main {
   background: white;
   padding: 4rem;
-  border-radius: 3rem;
+  border-radius: 12px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
@@ -269,7 +269,7 @@ body {
   background: #020617;
   color: white;
   padding: 1rem 2.5rem;
-  border-radius: 999px;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
   transition: transform 0.2s, background 0.2s;
@@ -283,7 +283,7 @@ body {
 /* --- Mockup Visual --- */
 .feature-visual-mockup {
   background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-  border-radius: 2rem;
+  border-radius: 12px;
   padding: 2rem;
   height: 400px;
   display: flex;
@@ -307,7 +307,7 @@ body {
 
 .tab {
   padding: 0.4rem 0.8rem;
-  border-radius: 0.5rem;
+  border-radius: 6px;
   font-size: 0.8rem;
   font-weight: 600;
   color: #64748b;
@@ -334,7 +334,7 @@ body {
 .mock-stat {
   background: white;
   padding: 1rem;
-  border-radius: 1rem;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -372,7 +372,7 @@ body {
 .mock-chart-placeholder {
   flex: 1;
   background: white;
-  border-radius: 1rem;
+  border-radius: 12px;
   display: flex;
   align-items: flex-end;
   justify-content: space-around;
@@ -419,7 +419,8 @@ body {
   flex-direction: column;
   gap: 1rem;
   width: 100%;
-  margin-top: -16px; /* Shifted up by 3mm total */
+  margin-top: -16px;
+  /* Shifted up by 3mm total */
 }
 
 .rule-card.mini {
@@ -471,7 +472,7 @@ body {
 .export-preview {
   width: 200px;
   background: white;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   padding: 1.5rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -522,7 +523,7 @@ body {
   color: #1ca75f;
   border: 2px solid #1ca75f;
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 6px;
   transform: rotate(-15deg);
   letter-spacing: 0.1em;
 }
@@ -615,8 +616,8 @@ body {
   /* Requested black shade */
   padding: 0.65rem 1rem;
   padding-left: 1rem;
-  border-radius: 1rem;
-  /* Reduced from 999px */
+  border-radius: 12px;
+  /* Reduced from 1rem */
   display: flex;
   align-items: center;
   gap: 2.5rem;
@@ -634,6 +635,14 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  /* Ensure image doesn't bleed out */
+}
+
+.logo-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 .nav-menu {
@@ -662,7 +671,7 @@ body {
   color: white;
   padding: 0.6rem 1.5rem;
   /* Reduced from 0.875rem 2.25rem */
-  border-radius: 0.75rem;
+  border-radius: 8px;
   text-decoration: none;
   font-weight: 700;
   font-size: 1.05rem;
@@ -768,25 +777,26 @@ body {
 .faq-contact {
   margin-top: 4rem;
   color: #64748b;
-  font-size: 1rem;
+  font-size: 1.25rem;
 }
 
 .faq-contact a {
   color: #1e293b;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
-  border-bottom: 1px solid #cbd5e1;
-  transition: border-color 0.2s;
+  border-bottom: 2px solid #cbd5e1;
+  transition: all 0.2s;
 }
 
 .faq-contact a:hover {
   border-color: var(--primary);
+  color: var(--primary);
 }
 
 .faq-right {
   background: white;
   padding: 2.5rem;
-  border-radius: 2.5rem;
+  border-radius: 12px;
   border: 1px solid var(--glass-border);
   box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.05);
 }
@@ -845,7 +855,7 @@ body {
   width: 44px;
   height: 24px;
   background: #e2e8f0;
-  border-radius: 999px;
+  border-radius: 8px;
   position: relative;
   transition: all 0.3s ease;
   flex-shrink: 0;
@@ -859,7 +869,7 @@ body {
   width: 18px;
   height: 18px;
   background: white;
-  border-radius: 50%;
+  border-radius: 4px;
   position: absolute;
   top: 3px;
   left: 3px;
@@ -869,7 +879,8 @@ body {
 
 .faq-toggle-switch.active .faq-slider {
   left: 23px;
-  background: #020617; /* Dark knob as in the image */
+  background: #020617;
+  /* Dark knob as in the image */
 }
 
 .faq-answer {
@@ -882,7 +893,8 @@ body {
 
 .faq-answer-inner {
   padding-top: 1rem;
-  padding-left: 3.25rem; /* Align with question text */
+  padding-left: 3.25rem;
+  /* Align with question text */
 }
 
 /* --- Auth Page --- */
@@ -901,7 +913,7 @@ body {
   max-width: 1100px;
   min-height: 700px;
   background: white;
-  border-radius: 2.5rem;
+  border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--glass-border);
@@ -972,7 +984,7 @@ body {
 .input-group input {
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid var(--glass-border);
-  border-radius: 1rem;
+  border-radius: 8px;
   padding: 0.875rem 1.25rem;
   font-size: 1rem;
   color: var(--text-main);
@@ -992,7 +1004,7 @@ body {
   color: white;
   border: none;
   padding: 1rem;
-  border-radius: 1rem;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -1355,8 +1367,8 @@ body {
 .input-group input {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--glass-border);
-  border-radius: 0.75rem;
-  padding: 0.75rem;
+  border-radius: 8px;
+  padding: 1rem;
   color: white;
   font-size: 1rem;
 }
@@ -1409,65 +1421,97 @@ body {
 
 .comparison-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 4rem;
-  align-items: flex-start;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: stretch;
+  margin-top: -1.5rem;
+  /* Pushes the grid upwards towards the header */
+}
+
+.method-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.method-column h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2.5rem;
 }
 
 .method-list {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .method-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   color: #64748b;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
 }
 
 .method-item.traditional {
-  color: #94a3b8;
-}
-
-.nomad-card-advantage {
-  background: white;
-  border-radius: 2rem;
-  padding: 3rem;
-  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f1f5f9;
-}
-
-.nomad-card-advantage h3 {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
   color: #1e293b;
 }
+
+.comparison-card {
+  background: white;
+  border-radius: 12px;
+  padding: 3.5rem;
+  box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+}
+
+.comparison-card h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  color: #1e293b;
+}
+
 
 .nomad-feature-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.75rem;
 }
 
 .nomad-feature-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
   font-weight: 500;
-  color: #334155;
+  color: #1e293b;
+  font-size: 1.15rem;
 }
 
-.icon-check {
-  color: #22c55e;
+.icon-check-wrapper {
+  width: 30px;
+  height: 30px;
+  background: #f0fdf4;
+  border: 1.5px solid #22c55e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  color: #22c55e;
+}
+
+.icon-check-wrapper svg {
+  stroke-width: 3.5px;
 }
 
 .icon-fail {
-  color: #cbd5e1;
+  color: #1e293b;
   flex-shrink: 0;
+  stroke-width: 2.5px;
 }
 
 @media (max-width: 992px) {
@@ -1475,7 +1519,7 @@ body {
     grid-template-columns: 1fr;
     gap: 3rem;
   }
-  
+
   .comparison-header h2 {
     font-size: 2.5rem;
   }
@@ -1529,7 +1573,7 @@ body {
 
 .footer-nav-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 6rem;
 }
 
@@ -1590,7 +1634,7 @@ body {
 .footer-social-btn {
   width: 42px;
   height: 42px;
-  border-radius: 50%;
+  border-radius: 8px;
   border: 1px solid var(--glass-border);
   display: flex;
   align-items: center;
@@ -1618,6 +1662,7 @@ body {
   .footer-top {
     flex-direction: column;
   }
+
   .footer-nav-grid {
     gap: 3rem;
   }
@@ -1627,8 +1672,254 @@ body {
   .footer-nav-grid {
     grid-template-columns: 1fr;
   }
+
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
   }
 }
+
+/* --- Huge Footer Branding --- */
+.footer-huge-brand {
+  width: 100%;
+  margin: 6rem 0 2rem;
+  display: flex;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.huge-text {
+  font-size: clamp(3rem, 16vw, 15rem);
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .footer-huge-brand {
+    margin: 4rem 0 2rem;
+  }
+}
+
+/* --- Legal Pages Styling --- */
+.legal-page-layout {
+  color: #1e293b;
+  line-height: 1.7;
+}
+
+.legal-header {
+  padding-top: 15mm;
+  margin-bottom: 4rem;
+}
+
+.legal-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  color: #000;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  line-height: 1;
+}
+
+.legal-date {
+  font-size: 1.125rem;
+  color: #64748b;
+}
+
+.legal-section {
+  margin-top: 5rem;
+}
+
+.legal-section-title {
+  margin-top: -3mm;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: #000;
+  letter-spacing: -0.03em;
+  margin-bottom: 2rem;
+  line-height: 1.1;
+}
+
+.legal-sub-section-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.legal-text {
+  font-size: 1.25rem;
+  color: #334155;
+  margin-bottom: 2rem;
+}
+
+.legal-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.legal-list li {
+  position: relative;
+
+  margin-bottom: 1.25rem;
+  font-size: 1.125rem;
+  color: #475569;
+}
+
+
+
+.legal-list li strong {
+  color: #000;
+  font-weight: 800;
+}
+
+
+.legal-page-layout footer {
+  padding-bottom: 15mm;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Modal Popup Standard (Solid White) */
+.modal-content {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--glass-border) !important;
+}
+
+.modal-content h3 {
+  color: #020617 !important;
+  margin-bottom: 1.5rem;
+}
+
+/* Ensure inputs inside white modals are clearly visible */
+.modal-content .input-group input {
+  background: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #020617 !important;
+}
+
+.modal-content .input-group label {
+  color: #64748b !important;
+}
+
+.modal-actions .btn-secondary {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.modal-actions .btn-secondary:hover {
+  background: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* --- Modern DatePicker Styling --- */
+.modern-datepicker-wrapper {
+  position: relative;
+  width: 100%;
+  z-index: 50; /* Ensure active picker stays above subsequent content */
+}
+
+.modern-datepicker-input {
+  width: 100%;
+  padding: 0.875rem 1.25rem 0.875rem 2.85rem !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--glass-border) !important;
+  background: white !important;
+  font-size: 1rem !important;
+  color: var(--text-main) !important;
+  outline: none !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+.modern-datepicker-input:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 4px rgba(28, 167, 95, 0.1) !important;
+}
+
+.calendar-icon {
+  position: absolute;
+  left: 1.15rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-dim);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Calendar Dropdown Styling */
+.react-datepicker-popper {
+  z-index: 9999 !important; /* Force on top of all other cards/modals */
+}
+
+.modern-calendar-dropdown {
+  background: white !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1) !important;
+  padding: 0.75rem !important;
+  font-family: inherit !important;
+  overflow: hidden;
+}
+
+
+.react-datepicker__header {
+  background: white !important;
+  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+  padding-top: 1rem !important;
+}
+
+.react-datepicker__current-month {
+  font-weight: 800 !important;
+  color: #1e293b !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.react-datepicker__day-name {
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+}
+
+.react-datepicker__day {
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  width: 2.2rem !important;
+  line-height: 2.2rem !important;
+  margin: 0.15rem !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: #f1f5f9 !important;
+}
+
+.react-datepicker__day--selected {
+  background: var(--gradient-main) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 10px rgba(28, 167, 95, 0.3) !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background: rgba(28, 167, 95, 0.1) !important;
+  color: var(--primary) !important;
+}
+
+.react-datepicker__navigation {
+  top: 1.5rem !important;
+}
+
+.react-datepicker__navigation--previous { left: 1rem !important; }
+.react-datepicker__navigation--next { right: 1rem !important; }
