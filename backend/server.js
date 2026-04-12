@@ -7,11 +7,17 @@ const { OAuth2Client } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
+
 dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const PORT = process.env.PORT || 5000;
+
+// --- SWAGGER ---
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // --- MIDDLEWARE ---
 const authenticateToken = (req, res, next) => {
@@ -31,7 +37,32 @@ app.use(cors());
 app.use(express.json());
 
 // --- ROUTES ---
-// Google Auth Endpoint
+/**
+ * @swagger
+ * /api/auth/google:
+ *   post:
+ *     summary: Authenticate with Google
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [credential]
+ *             properties:
+ *               credential:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthResponse'
+ *       500:
+ *         description: Authentication failed
+ */
 app.post('/api/auth/google', async (req, res) => {
   try {
     const { credential } = req.body;
@@ -69,7 +100,29 @@ app.post('/api/auth/google', async (req, res) => {
   }
 });
 
-// Register Endpoint
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email: { type: string }
+ *               password: { type: string }
+ *               name: { type: string }
+ *     responses:
+ *       201:
+ *         description: Registration successful
+ *       400:
+ *         description: User already exists
+ */
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { email, password, name } = req.body;
@@ -110,7 +163,28 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
-// Login Endpoint
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login with email and password
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email: { type: string }
+ *               password: { type: string }
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid credentials
+ */
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -141,7 +215,24 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Get all stays for a user (Protected)
+/**
+ * @swagger
+ * /api/stays:
+ *   get:
+ *     summary: Get all stays for the authenticated user
+ *     tags: [Stays]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of stays
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Stay'
+ */
 app.get('/api/stays', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -155,7 +246,26 @@ app.get('/api/stays', authenticateToken, async (req, res) => {
   }
 });
 
-// Add a new stay (Protected)
+/**
+ * @swagger
+ * /api/stays:
+ *   post:
+ *     summary: Add a new stay
+ *     tags: [Stays]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Stay'
+ *     responses:
+ *       201:
+ *         description: Stay created
+ *       400:
+ *         description: Overlap detected
+ */
 app.post('/api/stays', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -196,7 +306,34 @@ app.post('/api/stays', authenticateToken, async (req, res) => {
   }
 });
 
-// Get residency summary (Protected)
+/**
+ * @swagger
+ * /api/summary/{countryCode}:
+ *   get:
+ *     summary: Get residency summary for a specific country
+ *     tags: [Analysis]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: countryCode
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ISO country code (or SCH for Schengen)
+ *     responses:
+ *       200:
+ *         description: Summary data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 countryCode: { type: string }
+ *                 daysUsed: { type: integer }
+ *                 threshold: { type: integer }
+ *                 schengenStatus: { type: object, nullable: true }
+ */
 app.get('/api/summary/:countryCode', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -228,7 +365,16 @@ app.get('/api/summary/:countryCode', authenticateToken, async (req, res) => {
   }
 });
 
-// Seed Initial User (Mock)
+/**
+ * @swagger
+ * /api/init-mock:
+ *   post:
+ *     summary: Seed a initial demo user
+ *     tags: [Internal]
+ *     responses:
+ *       200:
+ *         description: User created or retrieved
+ */
 app.post('/api/init-mock', async (req, res) => {
   try {
     const user = await prisma.user.upsert({

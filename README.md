@@ -36,7 +36,8 @@
 | **Animations** | **Framer Motion** | Silky-smooth micro-interactions and timeline effects. |
 | **Charts** | **Recharts** | Interactive residency data visualization. |
 | **Backend** | **Node.js + Express** | High-performance RESTful API. |
-| **Database** | **Prisma (PostgreSQL)** | Type-safe ORM for mission-critical travel data. |
+| **Database** | **Prisma (Postgres/SQLite)** | Type-safe ORM for mission-critical travel data. |
+| **Documentation** | **Swagger (OpenAPI)** | Interactive API documentation and testing. |
 | **Logic** | **date-fns**| Specialized mathematical engine for date range calculations. |
 
 ---
@@ -72,6 +73,21 @@ cd ../frontend
 npm install
 npm run dev
 ```
+
+---
+
+## 📖 API Documentation
+
+Nomad-Tax comes with a built-in, interactive API reference. You can view, test, and understand all backend endpoints directly from your browser.
+
+**Accessing the documentation:**
+1. Ensure the backend server is running (`cd backend && npm start`).
+2. Navigate to: [http://localhost:5000/api-docs](http://localhost:5000/api-docs)
+
+**Features:**
+- **Interactive Testing**: Execute requests directly from the UI.
+- **JWT Support**: Authorize with your user token to test protected routes.
+- **Dynamic Schemas**: Explore the data models for `User`, `Stay`, and `CountryRule`.
 
 ---
 
