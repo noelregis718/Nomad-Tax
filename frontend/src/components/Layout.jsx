@@ -38,7 +38,6 @@ const Layout = ({ children, onAddClick, title, subtitle }) => {
           fontSize: '1.6rem',
           fontWeight: 800,
         }}>
-          <img src="/taxes.png" alt="Logo" className="logo-img" style={{ height: '32px' }} />
           <span className="text-gradient">NomadTax</span>
         </div>
 
@@ -124,7 +123,7 @@ const Layout = ({ children, onAddClick, title, subtitle }) => {
       </aside>
 
       {/* Main Content */}
-      <main style={{ flex: 1, padding: '1.25rem 3.5rem', overflowY: 'auto' }}>
+      <main style={{ flex: 1, padding: '1.25rem 3.5rem', overflowY: 'auto', overflowX: 'hidden' }}>
         {/* Unified Search Row */}
         <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '1rem' }}>
           <div style={{ position: 'relative', width: '100%', maxWidth: '400px' }}>

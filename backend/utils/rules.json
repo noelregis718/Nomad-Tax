@@ -1,0 +1,49 @@
+{
+  "GLOBAL_DEFAULT": {
+    "threshold": 183,
+    "logic": "STANDARD",
+    "description": "Universal 183-day standard for tax residency."
+  },
+  "SCH": {
+    "name": "Schengen Area",
+    "threshold": 90,
+    "logic": "SCHENGEN",
+    "description": "90 days in any rolling 180-day window."
+  },
+  "USA": {
+    "name": "United States",
+    "threshold": 183,
+    "logic": "WEIGHTED_3_YEAR",
+    "description": "Substantial Presence Test (Current + 1/3 Previous + 1/6 Year Before)."
+  },
+  "GBR": {
+    "name": "United Kingdom",
+    "threshold": 183,
+    "logic": "MIDNIGHT_COUNT",
+    "description": "Counts days present in the UK at midnight. Ties test foundations."
+  },
+  "CHN": {
+    "name": "China",
+    "threshold": 183,
+    "logic": "FULL_24H_ONLY",
+    "description": "Requires full 24-hour presence. Clock resets after 30 days out."
+  },
+  "RUS": {
+    "name": "Russia",
+    "threshold": 183,
+    "logic": "ROLLING_12M",
+    "description": "183 days within any 12 consecutive months."
+  },
+  "AUS": {
+    "name": "Australia",
+    "threshold": 183,
+    "logic": "STANDARD",
+    "description": "183-day test for the Australian income year (July-June)."
+  },
+  "CAN": {
+    "name": "Canada",
+    "threshold": 183,
+    "logic": "STANDARD",
+    "description": "Sojourning for 183 days or more in a calendar year."
+  }
+}

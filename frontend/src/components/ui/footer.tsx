@@ -47,7 +47,7 @@ export function Footer({
           </div>
 
           <div className="footer-nav-grid">
-            
+
             <div className="footer-nav-group">
               <h4>Legal</h4>
               <ul className="footer-nav-list">
@@ -62,7 +62,7 @@ export function Footer({
         </div>
 
         <div className="footer-huge-brand">
-          <motion.h2 
+          <motion.h2
             className="huge-text"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -82,9 +82,9 @@ export function Footer({
           <ul className="footer-social-list">
             {socialLinks.map((link, i) => (
               <li key={i}>
-                <a 
-                  href={link.href} 
-                  className="footer-social-btn" 
+                <a
+                  href={link.href}
+                  className="footer-social-btn"
                   aria-label={link.label}
                   target="_blank"
                   rel="noopener noreferrer"

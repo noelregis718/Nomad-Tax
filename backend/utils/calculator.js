@@ -1,4 +1,5 @@
-const { differenceInDays, isWithinInterval, startOfDay, endOfDay, eachDayOfInterval, subDays, isSameDay } = require('date-fns');
+const { differenceInDays, isWithinInterval, startOfDay, endOfDay, eachDayOfInterval, subDays, isSameDay, subYears, startOfYear, endOfYear } = require('date-fns');
+const rules = require('./rules.json');
 
 /**
  * Core Calculator for Nomad-Tax Residency
@@ -6,27 +7,91 @@ const { differenceInDays, isWithinInterval, startOfDay, endOfDay, eachDayOfInter
 class TaxCalculator {
   /**
    * Calculates the total days spent in a country within a specific window.
-   * @param {Array} stays - Array of stay objects { arrivalDate, departureDate, countryCode }
-   * @param {string} countryCode - The country to check
-   * @param {Date} windowStart - Start of the calculation window
-   * @param {Date} windowEnd - End of the calculation window
-   * @returns {number} - Total days spent
+   * Handles specialized logic (Weighted, Midnight, 24h) based on rules.json
+   * @param {Array} stays - Array of stay objects
+   * @param {string} countryCode - ISO Code
+   * @param {Date} windowStart - Calculation start
+   * @param {Date} windowEnd - Calculation end
+   * @returns {number} - Effective days for residency
    */
   static calculateDaysInWindow(stays, countryCode, windowStart, windowEnd) {
+    const rule = rules[countryCode] || rules.GLOBAL_DEFAULT;
+    
+    // Branch logic based on rule type
+    if (rule.logic === 'WEIGHTED_3_YEAR' && countryCode === 'USA') {
+      return this.calculateUSSubstantialPresence(stays, windowEnd);
+    }
+
     let totalDays = 0;
     const targetStays = stays.filter(s => s.countryCode === countryCode);
 
     targetStays.forEach(stay => {
-      const start = new Date(Math.max(new Date(stay.arrivalDate), windowStart));
-      const end = new Date(Math.min(new Date(stay.departureDate), windowEnd));
+      const stayStart = new Date(stay.arrivalDate);
+      const stayEnd = new Date(stay.departureDate);
+      
+      const start = new Date(Math.max(stayStart, windowStart));
+      const end = new Date(Math.min(stayEnd, windowEnd));
 
       if (start <= end) {
-        // We add 1 because both arrival and departure days usually count
-        totalDays += differenceInDays(end, start) + 1;
+        let days = differenceInDays(end, start) + 1;
+
+        // Apply specialized counting logic
+        if (rule.logic === 'MIDNIGHT_COUNT') {
+          // UK/Midnight logic: Usually days - 1 (arrival doesn't count if after midnight, departure does)
+          days = Math.max(0, days - 1);
+        } else if (rule.logic === 'FULL_24H_ONLY') {
+          // China logic: Only full days count. Stays of 1-5 = 3 full days (2, 3, 4).
+          days = Math.max(0, days - 2);
+        }
+        
+        totalDays += days;
       }
     });
 
     return totalDays;
+  }
+
+  /**
+   * Specialized logic for US Substantial Presence Test
+   * Formula: (Current Year Days) + (1/3 Last Year Days) + (1/6 2-Years Ago Days)
+   */
+  static calculateUSSubstantialPresence(stays, targetDate) {
+    const currentYear = targetDate.getFullYear();
+    
+    const countForYear = (year) => {
+      const start = startOfYear(new Date(year, 0, 1));
+      const end = endOfYear(new Date(year, 0, 1));
+      let days = 0;
+      stays.filter(s => s.countryCode === 'USA').forEach(stay => {
+        const sStart = new Date(Math.max(new Date(stay.arrivalDate), start));
+        const sEnd = new Date(Math.min(new Date(stay.departureDate), end));
+        if (sStart <= sEnd) days += differenceInDays(sEnd, sStart) + 1;
+      });
+      return days;
+    };
+
+    const daysThisYear = countForYear(currentYear);
+    const daysLastYear = countForYear(currentYear - 1);
+    const daysTwoYearsAgo = countForYear(currentYear - 2);
+
+    return Math.round(daysThisYear + (daysLastYear / 3) + (daysTwoYearsAgo / 6));
+  }
+
+  /**
+   * Helper to get rules from registry
+   */
+  static getRule(countryCode) {
+    return rules[countryCode] || rules.GLOBAL_DEFAULT;
+  }
+
+  /**
+   * Specifically for Russia (Rolling 12M logic)
+   * Russia requires 183 days in any 12-month period.
+   */
+  static calculateRollingDays(stays, countryCode, targetDate) {
+    const windowEnd = endOfDay(targetDate);
+    const windowStart = startOfDay(subDays(windowEnd, 364)); // 365 days total
+    return this.calculateDaysInWindow(stays, countryCode, windowStart, windowEnd);
   }
 
   /**

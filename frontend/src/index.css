@@ -1258,6 +1258,43 @@ body {
   grid-auto-rows: minMax(180px, auto);
 }
 
+.chart-container {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chart-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05) !important;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+}
+
+.add-record-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-record-btn:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
 .stats-card {
   padding: 1.5rem;
   display: flex;
@@ -1364,13 +1401,121 @@ body {
   color: var(--text-dim);
 }
 
-.input-group input {
-  background: rgba(255, 255, 255, 0.05);
+.input-group input, .input-group select {
+  background: rgba(255, 255, 255, 0.7);
   border: 1px solid var(--glass-border);
   border-radius: 8px;
-  padding: 1rem;
-  color: white;
+  padding: 0.875rem 1.25rem;
   font-size: 1rem;
+  color: var(--text-main);
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.input-group input:focus, .input-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(28, 167, 95, 0.1);
+  background: white;
+}
+
+.custom-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+}
+
+.currency-picker-container {
+  position: relative;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.currency-trigger {
+  width: 100%;
+  padding: 0.875rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.currency-trigger:hover {
+  border-color: var(--primary);
+  background: white;
+}
+
+.currency-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 120px;
+  background: white;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1100;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+/* Modern Scrollbar */
+.currency-dropdown::-webkit-scrollbar {
+  width: 4px;
+}
+.currency-dropdown::-webkit-scrollbar-track {
+  background: transparent;
+}
+.currency-dropdown::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.currency-option {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.currency-option:hover {
+  background: rgba(28, 167, 95, 0.05);
+  border-color: rgba(28, 167, 95, 0.2);
+}
+
+.currency-option.selected {
+  background: rgba(28, 167, 95, 0.1);
+  border-color: var(--primary);
+}
+
+.currency-symbol {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.currency-code {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e293b;
 }
 
 .modal-actions {
@@ -1689,7 +1834,7 @@ body {
 }
 
 .huge-text {
-  font-size: clamp(3rem, 16vw, 15rem);
+  font-size: clamp(6rem, 30vw, 14rem);
   font-weight: 800;
   color: #1e293b;
   letter-spacing: -0.06em;
@@ -1828,7 +1973,8 @@ html {
 .modern-datepicker-wrapper {
   position: relative;
   width: 100%;
-  z-index: 50; /* Ensure active picker stays above subsequent content */
+  z-index: 50;
+  /* Ensure active picker stays above subsequent content */
 }
 
 .modern-datepicker-input {
@@ -1862,7 +2008,8 @@ html {
 
 /* Calendar Dropdown Styling */
 .react-datepicker-popper {
-  z-index: 9999 !important; /* Force on top of all other cards/modals */
+  z-index: 9999 !important;
+  /* Force on top of all other cards/modals */
 }
 
 .modern-calendar-dropdown {
@@ -1878,7 +2025,7 @@ html {
 
 .react-datepicker__header {
   background: white !important;
-  border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
   padding-top: 1rem !important;
 }
 
@@ -1921,5 +2068,10 @@ html {
   top: 1.5rem !important;
 }
 
-.react-datepicker__navigation--previous { left: 1rem !important; }
-.react-datepicker__navigation--next { right: 1rem !important; }
+.react-datepicker__navigation--previous {
+  left: 1rem !important;
+}
+
+.react-datepicker__navigation--next {
+  right: 1rem !important;
+}

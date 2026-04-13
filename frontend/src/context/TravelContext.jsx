@@ -16,18 +16,21 @@ export const TravelProvider = ({ children }) => {
     
     setLoading(true);
     try {
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
       const [staysRes, summaryRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/stays'),
-        axios.get('http://localhost:5000/api/summary/SCH') // Default to Schengen
+        axios.get('http://localhost:5000/api/stays', config),
+        axios.get('http://localhost:5000/api/summary/all', config)
       ]);
       
       setStays(staysRes.data);
-      setSummaries([
-        { countryName: 'Schengen Area', ...summaryRes.data }
-      ]);
+      setSummaries(Array.isArray(summaryRes.data) ? summaryRes.data : []);
       setInitialLoaded(true);
     } catch (error) {
       console.error('Error fetching travel data:', error);
+      setSummaries([]);
     } finally {
       setLoading(false);
     }

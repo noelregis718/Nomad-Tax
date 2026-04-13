@@ -28,6 +28,10 @@ model Stay {
   userId        String
   countryCode   String   // e.g., "FR" for France, "SCH" for Schengen Area
   countryName   String
+  city          String?
+  category      String?  @default("Personal") // "Work", "Personal", "Transit"
+  expenses      Float?   @default(0)
+  currency      String?  @default("USD")
   arrivalDate   DateTime
   departureDate DateTime
   notes         String?

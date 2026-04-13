@@ -1,69 +1,125 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const Timeline = ({ stays }) => {
-  // Mock data if none provided
-  const travelStays = stays || [
-    { id: 1, country: 'France', start: '2026-01-10', end: '2026-02-15', color: '#6366f1' },
-    { id: 2, country: 'Italy', start: '2026-02-16', end: '2026-03-20', color: '#a855f7' },
-    { id: 3, country: 'Spain', start: '2026-04-05', end: '2026-05-10', color: '#ec4899' },
+const Timeline = ({ stays = [], onAddClick }) => {
+  // Aggregate data for the trend lines (Monthly)
+  const monthlyData = [
+    { name: 'Jan', intensity: 0, expenses: 0 },
+    { name: 'Feb', intensity: 0, expenses: 0 },
+    { name: 'Mar', intensity: 0, expenses: 0 },
+    { name: 'Apr', intensity: 0, expenses: 0 },
+    { name: 'May', intensity: 0, expenses: 0 },
+    { name: 'Jun', intensity: 0, expenses: 0 },
+    { name: 'Jul', intensity: 0, expenses: 0 },
+    { name: 'Aug', intensity: 0, expenses: 0 },
+    { name: 'Sep', intensity: 0, expenses: 0 },
+    { name: 'Oct', intensity: 0, expenses: 0 },
+    { name: 'Nov', intensity: 0, expenses: 0 },
+    { name: 'Dec', intensity: 0, expenses: 0 },
   ];
+
+  stays.forEach(stay => {
+    const start = new Date(stay.arrivalDate);
+    const end = new Date(stay.departureDate);
+    const monthIndex = start.getMonth();
+    
+    const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    monthlyData[monthIndex].intensity += duration;
+    monthlyData[monthIndex].expenses += (stay.expenses || 0);
+  });
 
   return (
     <div className="glass-card" style={{ padding: '2rem' }}>
-      <h3 style={{ marginBottom: '2rem' }}>Travel Timeline</h3>
-      <div style={{ position: 'relative', height: '100px', width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', overflow: 'hidden' }}>
-        {/* Months labels */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 10px', color: 'var(--text-muted)', fontSize: '0.75rem', position: 'absolute', width: '100%', top: '5px' }}>
-          <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+      <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div>
+            <h3 style={{ margin: 0 }}>Travel Activity Timeline</h3>
+            <p style={{ color: 'var(--text-dim)', fontSize: '0.8rem', marginTop: '0.25rem' }}>Combined residency & financial intelligence</p>
+          </div>
+          <button 
+            onClick={onAddClick}
+            className="add-record-btn"
+            title="Log New Trip"
+            style={{ fontSize: '0.75rem', fontWeight: 700, width: 'auto', padding: '0 0.8rem', height: '24px' }}
+          >
+            LOG TRIP
+          </button>
         </div>
-
-        {/* Timeline Bars */}
-        <div style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center' }}>
-          {travelStays.map((stay, index) => {
-            const startDay = getDayOfYear(new Date(stay.start));
-            const endDay = getDayOfYear(new Date(stay.end));
-            const left = (startDay / 365) * 100;
-            const width = ((endDay - startDay) / 365) * 100;
-
-            return (
-              <motion.div
-                key={stay.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.1 }}
-                style={{
-                  position: 'absolute',
-                  left: `${left}%`,
-                  width: `${width}%`,
-                  height: '40px',
-                  background: stay.color,
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
-                }}
-              >
-                {stay.country}
-              </motion.div>
-            );
-          })}
+        <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.75rem', fontWeight: 600 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--primary)' }} />
+            <span>Days Abroad</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#1e293b' }} />
+            <span>Spend ($)</span>
+          </div>
         </div>
       </div>
+
+      {/* Top Part: The Intensity and Spend Curves (From Image) */}
+      <div style={{ height: '220px', width: '100%', marginBottom: '0.5rem' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorIntensity" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(0,0,0,0.05)" />
+            <XAxis dataKey="name" axisLine={false} tickLine={false} fontSize={10} tick={{ fill: 'var(--text-dim)' }} />
+            <YAxis yAxisId="left" axisLine={false} tickLine={false} fontSize={10} hide />
+            <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} fontSize={10} hide />
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(0,0,0,0.05)', strokeWidth: 1 }} />
+            <Area 
+              yAxisId="left"
+              type="monotone" 
+              dataKey="intensity" 
+              stroke="var(--primary)" 
+              strokeWidth={2}
+              fillOpacity={1} 
+              fill="url(#colorIntensity)" 
+            />
+            <Area
+              yAxisId="right"
+              type="monotone"
+              dataKey="expenses"
+              stroke="#1e293b" 
+              strokeWidth={3}
+              fill="transparent"
+              dot={{ r: 4, fill: '#1e293b', strokeWidth: 2, stroke: '#fff' }}
+              activeDot={{ r: 6, fill: '#1e293b', stroke: '#fff', strokeWidth: 2 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
     </div>
   );
 };
 
-// Helper to get day of year (1-365)
 const getDayOfYear = (date) => {
   const start = new Date(date.getFullYear(), 0, 0);
   const diff = date - start;
   const oneDay = 1000 * 60 * 60 * 24;
   return Math.floor(diff / oneDay);
+};
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="glass-card" style={{ padding: '0.75rem 1rem', border: '1px solid var(--glass-border)', background: 'white' }}>
+        <p style={{ fontWeight: 800, fontSize: '0.8rem', marginBottom: '0.4rem' }}>{label} 2024</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <span style={{ fontSize: '0.7rem', color: 'var(--primary)', fontWeight: 700 }}>{payload[0].value} Days Abroad</span>
+          <span style={{ fontSize: '0.7rem', color: '#1e293b', fontWeight: 700 }}>${payload[1].value.toLocaleString()} Total Spend</span>
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 export default Timeline;
