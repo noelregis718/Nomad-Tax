@@ -8,7 +8,7 @@ import Auth from './pages/Auth';
 import Dashboard from './pages/Dashboard';
 import History from './pages/History';
 import Rules from './pages/Rules';
-import Simulator from './pages/Simulator';
+import Wealth from './pages/Wealth';
 import Audit from './pages/Audit';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
@@ -48,9 +48,9 @@ function App() {
                 <Rules />
               </ProtectedRoute>
             } />
-            <Route path="/simulator" element={
+            <Route path="/wealth" element={
               <ProtectedRoute>
-                <Simulator />
+                <Wealth />
               </ProtectedRoute>
             } />
             <Route path="/audit" element={

@@ -1,4 +1,4 @@
-import { Globe, Plane, Clock, User, LogOut, LayoutDashboard, Map, FlaskConical, FolderLock, BookOpen, Search, Home } from 'lucide-react';
+import { Globe, Plane, Clock, User, LogOut, LayoutDashboard, Map, FlaskConical, FolderLock, BookOpen, Search, Home, TrendingUp, Wallet, Milestone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
@@ -16,8 +16,8 @@ const Layout = ({ children, onAddClick, title, subtitle }) => {
     { icon: <Home size={20} />, label: 'Dashboard', path: '/dashboard' },
     { icon: <Clock size={20} />, label: 'History', path: '/history' },
     { icon: <BookOpen size={20} />, label: 'Rules Hub', path: '/rules' },
-    { icon: <FlaskConical size={20} />, label: 'Simulator', path: '/simulator' },
-    { icon: <FolderLock size={20} />, label: 'Audit Vault', path: '/audit' },
+    { icon: <Wallet size={20} />, label: 'Wealth', path: '/wealth' },
+    { icon: <Milestone size={20} />, label: 'Roadmap', path: '/audit' },
   ];
 
   const displayTitle = title || `Welcome back, ${user?.name?.split(' ')[0] || 'Nomad'}`;
